@@ -18,6 +18,10 @@ module Sprites
       def create(sprite_name, comment: nil, &block)
         @client.post_stream("/v1/sprites/#{sprite_name}/checkpoint", { comment: }, &block)
       end
+
+      def restore(sprite_name, checkpoint_id, &block)
+        @client.post_stream("/v1/sprites/#{sprite_name}/checkpoints/#{checkpoint_id}/restore", {}, &block)
+      end
     end
   end
 end

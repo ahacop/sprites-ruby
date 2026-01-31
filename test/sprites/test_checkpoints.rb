@@ -113,4 +113,38 @@ class TestCheckpoints < Minitest::Test
       client.sprites.delete(sprite.name)
     end
   end
+
+  def test_checkpoints_restore
+    VCR.use_cassette("checkpoints_restore") do
+      sprite = client.sprites.create(name: "checkpoint-restore-sprite")
+      client.checkpoints.create(sprite.name, comment: "restore test")
+
+      events = client.checkpoints.restore(sprite.name, "v1")
+
+      assert_equal 3, events.size
+
+      assert_equal "info", events[0][:type]
+      assert_equal "Restoring from checkpoint v1...", events[0][:data]
+
+      assert_equal "info", events[1][:type]
+      assert_equal "Container components started successfully", events[1][:data]
+
+      assert_equal "complete", events[2][:type]
+      assert_equal "Restore from v1 complete", events[2][:data]
+
+      client.sprites.delete(sprite.name)
+    end
+  end
+
+  def test_checkpoints_restore_checkpoint_not_found
+    VCR.use_cassette("checkpoints_restore_not_found") do
+      sprite = client.sprites.create(name: "checkpoint-restore-not-found-sprite")
+
+      assert_raises Sprites::Error do
+        client.checkpoints.restore(sprite.name, "nonexistent")
+      end
+
+      client.sprites.delete(sprite.name)
+    end
+  end
 end

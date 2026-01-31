@@ -32,6 +32,11 @@ module Sprites
       raise_error(response.body) unless response.success?
 
       events = parse_ndjson(response.body)
+
+      if (error_event = events.find { |e| e[:type] == "error" })
+        raise Error, error_event[:error]
+      end
+
       block_given? ? events.each(&block) : events
     end
 
