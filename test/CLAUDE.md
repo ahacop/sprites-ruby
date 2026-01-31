@@ -35,6 +35,18 @@ end
 - Type checking: `assert_kind_of Sprites::Sprite, sprite`
 - Unit tests (like Collection) don't need VCR
 
+## Assertions
+
+Be specific with assertions so the return structure is clear from reading the test:
+
+```ruby
+# Bad - doesn't show what the response looks like
+assert policy.key?(:egress)
+
+# Good - documents the actual response structure
+assert_equal "allow-all", policy[:egress][:policy]
+```
+
 ## VCR Cassettes
 
 - Stored in `test/cassettes/`

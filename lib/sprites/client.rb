@@ -18,6 +18,10 @@ module Sprites
       Resources::Checkpoints.new(self)
     end
 
+    def policies
+      Resources::Policies.new(self)
+    end
+
     def get(path) = handle_response(connection.get(path))
 
     def post(path, body) = handle_response(connection.post(path, body.to_json, "Content-Type" => "application/json"))
