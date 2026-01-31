@@ -80,4 +80,24 @@ class TestClient < Minitest::Test
       end
     end
   end
+
+  def test_sprites_retrieve_not_found
+    VCR.use_cassette("sprites_retrieve_not_found") do
+      client = Sprites::Client.new(token: ENV["SPRITES_TOKEN"])
+
+      assert_raises Sprites::Error do
+        client.sprites.retrieve("nonexistent-sprite")
+      end
+    end
+  end
+
+  def test_sprites_list_invalid_token
+    VCR.use_cassette("sprites_list_invalid_token") do
+      client = Sprites::Client.new(token: "invalid-token")
+
+      assert_raises Sprites::Error do
+        client.sprites.list
+      end
+    end
+  end
 end
