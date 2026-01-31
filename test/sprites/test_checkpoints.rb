@@ -14,8 +14,19 @@ class TestCheckpoints < Minitest::Test
       sprite = client.sprites.create(name: "checkpoint-test-sprite")
       events = client.checkpoints.create(sprite.name, comment: "test checkpoint")
 
-      assert_kind_of Array, events
-      assert events.any? { |e| e[:type] == "complete" }
+      assert_equal 10, events.size
+
+      assert_equal "info", events[0][:type]
+      assert_equal "Creating checkpoint...", events[0][:data]
+
+      assert_equal "info", events[1][:type]
+      assert_equal "Checkpoint created successfully", events[1][:data]
+
+      assert_equal "info", events[3][:type]
+      assert_equal "  ID: v1", events[3][:data]
+
+      assert_equal "complete", events[9][:type]
+      assert_equal "Checkpoint v1 created successfully", events[9][:data]
 
       client.sprites.delete(sprite.name)
     end
@@ -29,8 +40,13 @@ class TestCheckpoints < Minitest::Test
         yielded_events << event
       end
 
-      refute_empty yielded_events
-      assert yielded_events.all? { |e| e.key?(:type) }
+      assert_equal 10, yielded_events.size
+
+      assert_equal "info", yielded_events[0][:type]
+      assert_equal "Creating checkpoint...", yielded_events[0][:data]
+
+      assert_equal "complete", yielded_events[9][:type]
+      assert_equal "Checkpoint v1 created successfully", yielded_events[9][:data]
 
       client.sprites.delete(sprite.name)
     end
@@ -78,9 +94,9 @@ class TestCheckpoints < Minitest::Test
       checkpoint = client.checkpoints.retrieve(sprite.name, "v1")
 
       assert_equal "v1", checkpoint[:id]
+      assert_equal "2026-01-22T20:46:34Z", checkpoint[:create_time]
       assert_equal "retrieve test", checkpoint[:comment]
       assert_equal false, checkpoint[:is_auto]
-      assert checkpoint.key?(:create_time)
 
       client.sprites.delete(sprite.name)
     end
