@@ -19,6 +19,10 @@ module Sprites
       def retrieve(name)
         Sprite.new(**@client.get("/v1/sprites/#{name}"))
       end
+
+      def create(name:)
+        Sprite.new(**@client.post("/v1/sprites", { name: }))
+      end
     end
   end
 end

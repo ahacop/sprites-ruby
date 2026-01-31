@@ -16,6 +16,8 @@ module Sprites
 
     def get(path) = parse_json(connection.get(path))
 
+    def post(path, body) = parse_json(connection.post(path, body.to_json, "Content-Type" => "application/json"))
+
     private
 
     def parse_json(response) = JSON.parse(response.body, symbolize_names: true)

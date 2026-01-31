@@ -48,4 +48,16 @@ class TestClient < Minitest::Test
       assert sprite.updated_at
     end
   end
+
+  def test_sprites_create
+    VCR.use_cassette("sprites_create") do
+      client = Sprites::Client.new(token: ENV["SPRITES_TOKEN"])
+      sprite = client.sprites.create(name: "new-sprite")
+
+      assert_kind_of Sprites::Sprite, sprite
+      assert_equal "new-sprite", sprite.name
+      assert sprite.id
+      assert sprite.url
+    end
+  end
 end
