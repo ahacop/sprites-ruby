@@ -1,0 +1,128 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.sprites.dev/v1/sprites
+    body:
+      encoding: UTF-8
+      string: '{"name":"checkpoint-not-found-sprite"}'
+    headers:
+      User-Agent:
+      - Faraday v2.14.0
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer <SPRITES_TOKEN>
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Date:
+      - Sat, 31 Jan 2026 16:03:24 GMT
+      Vary:
+      - accept-encoding
+      Content-Type:
+      - application/json; charset=utf-8
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - GI_cTYQFxh4vtkMAZK1k
+      Transfer-Encoding:
+      - chunked
+      Server:
+      - Fly/c3040578e (2026-01-27)
+      Via:
+      - 1.1 fly.io
+      Fly-Request-Id:
+      - 01KGACPX8VXG6EVS2XVQMM7D2A-fra
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id":"sprite-c24cc1ae-a4a2-4d5d-a283-1c7fcbd07a0c","name":"checkpoint-not-found-sprite","status":"cold","version":null,"url":"https://checkpoint-not-found-sprite-j34t.sprites.app","updated_at":"2026-01-31T16:03:24.352788Z","created_at":"2026-01-31T16:03:24.352788Z","organization":"changebot-ai","url_settings":{"auth":"sprite"},"environment_version":null}'
+  recorded_at: Sat, 31 Jan 2026 16:03:24 GMT
+- request:
+    method: get
+    uri: https://api.sprites.dev/v1/sprites/checkpoint-not-found-sprite/checkpoints/nonexistent
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v2.14.0
+      Authorization:
+      - Bearer <SPRITES_TOKEN>
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 500
+      message: Internal Server Error
+    headers:
+      Content-Type:
+      - text/plain; charset=utf-8
+      Sprite-Version:
+      - v0.0.1-rc31
+      X-Content-Type-Options:
+      - nosniff
+      Date:
+      - Sat, 31 Jan 2026 16:03:24 GMT
+      Transfer-Encoding:
+      - chunked
+      Server:
+      - Fly/c3040578e (2026-01-27)
+      Via:
+      - 1.1 fly.io
+      Fly-Request-Id:
+      - 01KGACPXSHZSCVZ95TYNYT7GXV-fra
+    body:
+      encoding: ASCII-8BIT
+      string: 'Failed to get checkpoint: failed to get checkpoint: checkpoint not
+        found: checkpoint with path checkpoints/nonexistent not found
+
+        '
+  recorded_at: Sat, 31 Jan 2026 16:03:24 GMT
+- request:
+    method: delete
+    uri: https://api.sprites.dev/v1/sprites/checkpoint-not-found-sprite
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v2.14.0
+      Authorization:
+      - Bearer <SPRITES_TOKEN>
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      Date:
+      - Sat, 31 Jan 2026 16:03:25 GMT
+      Content-Type:
+      - text/plain; charset=utf-8
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - GI_cTbG2FiHqQmQAcSWi
+      Server:
+      - Fly/c3040578e (2026-01-27)
+      Via:
+      - 1.1 fly.io
+      Fly-Request-Id:
+      - 01KGACPY0WBGVC3VYXWJC90W15-fra
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 31 Jan 2026 16:03:25 GMT
+recorded_with: VCR 6.4.0

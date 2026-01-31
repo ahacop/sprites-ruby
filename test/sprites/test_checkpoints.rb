@@ -85,4 +85,32 @@ class TestCheckpoints < Minitest::Test
       client.sprites.delete(sprite.name)
     end
   end
+
+  def test_checkpoints_list_sprite_not_found
+    VCR.use_cassette("checkpoints_list_not_found") do
+      assert_raises Sprites::Error do
+        client.checkpoints.list("nonexistent-sprite")
+      end
+    end
+  end
+
+  def test_checkpoints_retrieve_sprite_not_found
+    VCR.use_cassette("checkpoints_retrieve_sprite_not_found") do
+      assert_raises Sprites::Error do
+        client.checkpoints.retrieve("nonexistent-sprite", "v1")
+      end
+    end
+  end
+
+  def test_checkpoints_retrieve_checkpoint_not_found
+    VCR.use_cassette("checkpoints_retrieve_checkpoint_not_found") do
+      sprite = client.sprites.create(name: "checkpoint-not-found-sprite")
+
+      assert_raises Sprites::Error do
+        client.checkpoints.retrieve(sprite.name, "nonexistent")
+      end
+
+      client.sprites.delete(sprite.name)
+    end
+  end
 end

@@ -52,6 +52,8 @@ module Sprites
       parsed = parse_json(body)
       message = parsed[:error] || parsed[:errors]&.join(", ") || "Unknown error"
       raise Error, message
+    rescue JSON::ParserError
+      raise Error, body.strip
     end
 
     def parse_json(json) = JSON.parse(json, symbolize_names: true)
