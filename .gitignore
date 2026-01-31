@@ -1,5 +1,6 @@
 Gemfile.lock
 .env.development.local
+.env.test.local
 *.gem
 *.rbc
 /.config
