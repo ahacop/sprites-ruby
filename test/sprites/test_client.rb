@@ -118,4 +118,21 @@ class TestClient < Minitest::Test
       end
     end
   end
+
+  def test_sprites_delete
+    VCR.use_cassette("sprites_delete") do
+      sprite = client.sprites.create(name: "sprite-to-delete")
+      result = client.sprites.delete(sprite.name)
+
+      assert_nil result
+    end
+  end
+
+  def test_sprites_delete_not_found
+    VCR.use_cassette("sprites_delete_not_found") do
+      assert_raises Sprites::Error do
+        client.sprites.delete("nonexistent-sprite")
+      end
+    end
+  end
 end

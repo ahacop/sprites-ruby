@@ -20,9 +20,13 @@ module Sprites
 
     def put(path, body) = handle_response(connection.put(path, body.to_json, "Content-Type" => "application/json"))
 
+    def delete(path) = handle_response(connection.delete(path))
+
     private
 
     def handle_response(response)
+      return nil if response.status == 204
+
       body = JSON.parse(response.body, symbolize_names: true)
 
       return body if response.success?

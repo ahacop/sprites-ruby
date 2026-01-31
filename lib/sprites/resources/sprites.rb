@@ -18,6 +18,8 @@ module Sprites
       def create(name:) = @client.post("/v1/sprites", { name: }).then(&Sprite)
 
       def update(name, **attrs) = @client.put("/v1/sprites/#{name}", attrs).then(&Sprite)
+
+      def delete(name) = @client.delete("/v1/sprites/#{name}")
     end
   end
 end
