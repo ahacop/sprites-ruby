@@ -1,0 +1,45 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.sprites.dev/v1/sprites/test-sprite
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v2.14.0
+      Authorization:
+      - Bearer <SPRITES_TOKEN>
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sat, 31 Jan 2026 10:21:18 GMT
+      Vary:
+      - accept-encoding
+      Content-Type:
+      - application/json; charset=utf-8
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - GI_JooVURSwztFUAa_Gh
+      Transfer-Encoding:
+      - chunked
+      Server:
+      - Fly/c3040578e (2026-01-27)
+      Via:
+      - 1.1 fly.io
+      Fly-Request-Id:
+      - 01KG9S4GQ2EG90TT7ZKXX9Q6WY-fra
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id":"sprite-00000000-0000-0000-0000-000000000001","name":"my-sprite","status":"warm","version":null,"url":"https://my-sprite-xxxx.sprites.app","updated_at":"2026-01-31T10:17:29.451120Z","created_at":"2026-01-31T10:06:45.399321Z","organization":"test-org","url_settings":{"auth":"sprite"},"environment_version":null}'
+  recorded_at: Sat, 31 Jan 2026 10:21:18 GMT
+recorded_with: VCR 6.4.0

@@ -31,4 +31,20 @@ class TestClient < Minitest::Test
       assert sprite.key?(:updated_at)
     end
   end
+
+  def test_sprites_retrieve
+    VCR.use_cassette("sprites_retrieve") do
+      client = Sprites::Client.new(token: ENV["SPRITES_TOKEN"])
+      sprite = client.sprites.retrieve("test-sprite")
+
+      assert_kind_of Sprites::Sprite, sprite
+      assert_equal "sprite-00000000-0000-0000-0000-000000000001", sprite.id
+      assert_equal "my-sprite", sprite.name
+      assert_equal "warm", sprite.status
+      assert_equal "https://my-sprite-xxxx.sprites.app", sprite.url
+      assert_equal "test-org", sprite.organization
+      assert sprite.created_at
+      assert sprite.updated_at
+    end
+  end
 end

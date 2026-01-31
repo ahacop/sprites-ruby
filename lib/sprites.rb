@@ -3,6 +3,7 @@
 require_relative "sprites/version"
 require_relative "sprites/configuration"
 require_relative "sprites/collection"
+require_relative "sprites/sprite"
 require_relative "sprites/resources/sprites"
 require_relative "sprites/client"
 

@@ -11,6 +11,10 @@ module Sprites
         @client.get("/v1/sprites") => { sprites:, has_more:, next_continuation_token: }
         Collection.new(sprites:, has_more:, next_continuation_token:)
       end
+
+      def retrieve(name)
+        Sprite.new(**@client.get("/v1/sprites/#{name}"))
+      end
     end
   end
 end
