@@ -1,0 +1,45 @@
+---
+http_interactions:
+  - request:
+      method: get
+      uri: https://api.sprites.dev/v1/sprites
+      body:
+        encoding: US-ASCII
+        string: ""
+      headers:
+        User-Agent:
+          - Faraday v2.14.0
+        Authorization:
+          - Bearer <SPRITES_TOKEN>
+        Accept-Encoding:
+          - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+        Accept:
+          - "*/*"
+    response:
+      status:
+        code: 200
+        message: OK
+      headers:
+        Date:
+          - Sat, 31 Jan 2026 09:46:32 GMT
+        Vary:
+          - accept-encoding
+        Content-Type:
+          - application/json; charset=utf-8
+        Cache-Control:
+          - max-age=0, private, must-revalidate
+        X-Request-Id:
+          - GI_Hu405y9raUdwAavrh
+        Transfer-Encoding:
+          - chunked
+        Server:
+          - Fly/c3040578e (2026-01-27)
+        Via:
+          - 1.1 fly.io
+        Fly-Request-Id:
+          - 01KG9Q4P75PXMVXVXKY2KJRWRZ-fra
+      body:
+        encoding: ASCII-8BIT
+        string: '{"sprites":[],"next_continuation_token":null,"has_more":true}'
+    recorded_at: Sat, 31 Jan 2026 09:46:32 GMT
+recorded_with: VCR 6.4.0
