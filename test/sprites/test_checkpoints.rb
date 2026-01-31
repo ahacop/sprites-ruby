@@ -69,4 +69,20 @@ class TestCheckpoints < Minitest::Test
       client.sprites.delete(sprite.name)
     end
   end
+
+  def test_checkpoints_retrieve
+    VCR.use_cassette("checkpoints_retrieve") do
+      sprite = client.sprites.create(name: "checkpoint-retrieve-sprite")
+      client.checkpoints.create(sprite.name, comment: "retrieve test")
+
+      checkpoint = client.checkpoints.retrieve(sprite.name, "v1")
+
+      assert_equal "v1", checkpoint[:id]
+      assert_equal "retrieve test", checkpoint[:comment]
+      assert_equal false, checkpoint[:is_auto]
+      assert checkpoint.key?(:create_time)
+
+      client.sprites.delete(sprite.name)
+    end
+  end
 end
