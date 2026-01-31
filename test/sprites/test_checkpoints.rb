@@ -43,4 +43,30 @@ class TestCheckpoints < Minitest::Test
       end
     end
   end
+
+  def test_checkpoints_list
+    VCR.use_cassette("checkpoints_list") do
+      sprite = client.sprites.create(name: "checkpoint-list-sprite")
+      client.checkpoints.create(sprite.name, comment: "first checkpoint")
+      client.checkpoints.create(sprite.name, comment: "second checkpoint")
+
+      checkpoints = client.checkpoints.list(sprite.name)
+
+      assert_kind_of Array, checkpoints
+      assert checkpoints.all? { |c| c.key?(:id) && c.key?(:create_time) && c.key?(:is_auto) }
+
+      first = checkpoints.find { |c| c[:comment] == "first checkpoint" }
+      second = checkpoints.find { |c| c[:comment] == "second checkpoint" }
+
+      refute_nil first
+      assert_equal "v1", first[:id]
+      assert_equal false, first[:is_auto]
+
+      refute_nil second
+      assert_equal "v2", second[:id]
+      assert_equal false, second[:is_auto]
+
+      client.sprites.delete(sprite.name)
+    end
+  end
 end

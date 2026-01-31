@@ -7,6 +7,10 @@ module Sprites
         @client = client
       end
 
+      def list(sprite_name)
+        @client.get("/v1/sprites/#{sprite_name}/checkpoints")
+      end
+
       def create(sprite_name, comment: nil, &block)
         @client.post_stream("/v1/sprites/#{sprite_name}/checkpoint", { comment: }, &block)
       end
