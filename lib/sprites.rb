@@ -7,6 +7,7 @@ require_relative "sprites/sprite"
 require_relative "sprites/resources/sprites"
 require_relative "sprites/resources/checkpoints"
 require_relative "sprites/resources/policies"
+require_relative "sprites/resources/exec"
 require_relative "sprites/client"
 
 module Sprites

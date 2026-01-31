@@ -22,6 +22,10 @@ module Sprites
       Resources::Policies.new(self)
     end
 
+    def exec
+      Resources::Exec.new(self)
+    end
+
     def get(path) = handle_response(connection.get(path))
 
     def post(path, body) = handle_response(connection.post(path, body.to_json, "Content-Type" => "application/json"))

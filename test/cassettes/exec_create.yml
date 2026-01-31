@@ -1,0 +1,99 @@
+---
+http_interactions:
+  - request:
+      method: post
+      uri: https://api.sprites.dev/v1/sprites
+      body:
+        encoding: UTF-8
+        string: '{"name":"exec-test-sprite"}'
+      headers:
+        User-Agent:
+          - Faraday v2.14.0
+        Authorization:
+          - Bearer <SPRITES_TOKEN>
+        Content-Type:
+          - application/json
+        Accept-Encoding:
+          - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+        Accept:
+          - "*/*"
+    response:
+      status:
+        code: 200
+        message: OK
+      headers:
+        Date:
+          - Sat, 31 Jan 2026 13:00:00 GMT
+        Content-Type:
+          - application/json; charset=utf-8
+        Cache-Control:
+          - max-age=0, private, must-revalidate
+        Transfer-Encoding:
+          - chunked
+      body:
+        encoding: ASCII-8BIT
+        string: '{"id":"sprite-00000000-0000-0000-0000-000000000004","name":"exec-test-sprite","status":"warm","version":null,"url":"https://exec-test-sprite-xxxx.sprites.app","updated_at":"2026-01-31T13:00:00.000000Z","created_at":"2026-01-31T13:00:00.000000Z","organization":"test-org","url_settings":{"auth":"sprite"},"environment_version":null}'
+    recorded_at: Sat, 31 Jan 2026 13:00:00 GMT
+  - request:
+      method: post
+      uri: https://api.sprites.dev/v1/sprites/exec-test-sprite/exec
+      body:
+        encoding: UTF-8
+        string: '{"command":"echo hello"}'
+      headers:
+        User-Agent:
+          - Faraday v2.14.0
+        Authorization:
+          - Bearer <SPRITES_TOKEN>
+        Content-Type:
+          - application/json
+        Accept-Encoding:
+          - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+        Accept:
+          - "*/*"
+    response:
+      status:
+        code: 200
+        message: OK
+      headers:
+        Date:
+          - Sat, 31 Jan 2026 13:00:01 GMT
+        Content-Type:
+          - application/json; charset=utf-8
+        Cache-Control:
+          - max-age=0, private, must-revalidate
+        Transfer-Encoding:
+          - chunked
+      body:
+        encoding: ASCII-8BIT
+        string: '{"exit_code":0,"output":"hello\n"}'
+    recorded_at: Sat, 31 Jan 2026 13:00:01 GMT
+  - request:
+      method: delete
+      uri: https://api.sprites.dev/v1/sprites/exec-test-sprite
+      body:
+        encoding: US-ASCII
+        string: ""
+      headers:
+        User-Agent:
+          - Faraday v2.14.0
+        Authorization:
+          - Bearer <SPRITES_TOKEN>
+        Accept-Encoding:
+          - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+        Accept:
+          - "*/*"
+    response:
+      status:
+        code: 204
+        message: No Content
+      headers:
+        Date:
+          - Sat, 31 Jan 2026 13:00:02 GMT
+        Cache-Control:
+          - max-age=0, private, must-revalidate
+      body:
+        encoding: ASCII-8BIT
+        string: ""
+    recorded_at: Sat, 31 Jan 2026 13:00:02 GMT
+recorded_with: VCR 6.4.0
