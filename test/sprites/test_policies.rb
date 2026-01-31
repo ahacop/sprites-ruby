@@ -27,4 +27,23 @@ class TestPolicies < Minitest::Test
       end
     end
   end
+
+  def test_policies_update
+    VCR.use_cassette("policies_update") do
+      sprite = client.sprites.create(name: "policy-update-sprite")
+      policy = client.policies.update(sprite.name, egress: { policy: "block-all" })
+
+      assert_equal "block-all", policy[:egress][:policy]
+
+      client.sprites.delete(sprite.name)
+    end
+  end
+
+  def test_policies_update_sprite_not_found
+    VCR.use_cassette("policies_update_not_found") do
+      assert_raises Sprites::Error do
+        client.policies.update("nonexistent-sprite", egress: { policy: "block-all" })
+      end
+    end
+  end
 end
