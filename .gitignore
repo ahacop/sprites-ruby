@@ -1,3 +1,5 @@
+Gemfile.lock
+.env.development.local
 *.gem
 *.rbc
 /.config
