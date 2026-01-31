@@ -2,6 +2,8 @@
 
 module Sprites
   class Sprite
+    def self.to_proc = ->(attrs) { new(**attrs) }
+
     attr_reader :id, :name, :status, :version, :url, :created_at, :updated_at,
                 :organization, :url_settings, :environment_version
 
