@@ -18,6 +18,8 @@ module Sprites
 
     def post(path, body) = handle_response(connection.post(path, body.to_json, "Content-Type" => "application/json"))
 
+    def put(path, body) = handle_response(connection.put(path, body.to_json, "Content-Type" => "application/json"))
+
     private
 
     def handle_response(response)

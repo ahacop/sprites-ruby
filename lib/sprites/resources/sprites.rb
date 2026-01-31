@@ -16,6 +16,8 @@ module Sprites
       def retrieve(name) = @client.get("/v1/sprites/#{name}").then(&Sprite)
 
       def create(name:) = @client.post("/v1/sprites", { name: }).then(&Sprite)
+
+      def update(name, **attrs) = @client.put("/v1/sprites/#{name}", attrs).then(&Sprite)
     end
   end
 end

@@ -100,4 +100,22 @@ class TestClient < Minitest::Test
       end
     end
   end
+
+  def test_sprites_update
+    VCR.use_cassette("sprites_update") do
+      sprite = client.sprites.update("test-sprite", url_settings: { auth: "public" })
+
+      assert_kind_of Sprites::Sprite, sprite
+      assert_equal "test-sprite", sprite.name
+      assert_equal({ auth: "public" }, sprite.url_settings)
+    end
+  end
+
+  def test_sprites_update_invalid_value
+    VCR.use_cassette("sprites_update_invalid") do
+      assert_raises Sprites::Error do
+        client.sprites.update("test-sprite", url_settings: { auth: "invalid" })
+      end
+    end
+  end
 end
