@@ -3,9 +3,14 @@
 require "test_helper"
 
 class TestClient < Minitest::Test
+  def setup
+    @client = Sprites::Client.new(token: ENV["SPRITES_TOKEN"])
+  end
+
+  private attr_reader :client
+
   def test_sprites_list_empty
     VCR.use_cassette("sprites_list_empty") do
-      client = Sprites::Client.new(token: ENV["SPRITES_TOKEN"])
       response = client.sprites.list
 
       assert_kind_of Sprites::Collection, response
@@ -15,7 +20,6 @@ class TestClient < Minitest::Test
 
   def test_sprites_list_with_data
     VCR.use_cassette("sprites_list_with_data") do
-      client = Sprites::Client.new(token: ENV["SPRITES_TOKEN"])
       response = client.sprites.list
 
       assert_kind_of Sprites::Collection, response
@@ -35,7 +39,6 @@ class TestClient < Minitest::Test
 
   def test_sprites_retrieve
     VCR.use_cassette("sprites_retrieve") do
-      client = Sprites::Client.new(token: ENV["SPRITES_TOKEN"])
       sprite = client.sprites.retrieve("test-sprite")
 
       assert_kind_of Sprites::Sprite, sprite
@@ -51,7 +54,6 @@ class TestClient < Minitest::Test
 
   def test_sprites_create
     VCR.use_cassette("sprites_create") do
-      client = Sprites::Client.new(token: ENV["SPRITES_TOKEN"])
       sprite = client.sprites.create(name: "new-sprite")
 
       assert_kind_of Sprites::Sprite, sprite
@@ -83,8 +85,6 @@ class TestClient < Minitest::Test
 
   def test_sprites_retrieve_not_found
     VCR.use_cassette("sprites_retrieve_not_found") do
-      client = Sprites::Client.new(token: ENV["SPRITES_TOKEN"])
-
       assert_raises Sprites::Error do
         client.sprites.retrieve("nonexistent-sprite")
       end
