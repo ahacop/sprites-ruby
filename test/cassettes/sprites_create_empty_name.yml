@@ -1,0 +1,47 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.sprites.dev/v1/sprites
+    body:
+      encoding: UTF-8
+      string: '{"name":""}'
+    headers:
+      User-Agent:
+      - Faraday v2.14.0
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer <SPRITES_TOKEN>
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Date:
+      - Sat, 31 Jan 2026 10:30:25 GMT
+      Vary:
+      - accept-encoding
+      Content-Type:
+      - application/json; charset=utf-8
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - GI_KIgTOTKjkpTwAbCgh
+      Transfer-Encoding:
+      - chunked
+      Server:
+      - Fly/c3040578e (2026-01-27)
+      Via:
+      - 1.1 fly.io
+      Fly-Request-Id:
+      - 01KG9SN7FMXNFV851Y8PR382DW-fra
+    body:
+      encoding: ASCII-8BIT
+      string: '{"errors":["invalid sprite name format"]}'
+  recorded_at: Sat, 31 Jan 2026 10:30:25 GMT
+recorded_with: VCR 6.4.0

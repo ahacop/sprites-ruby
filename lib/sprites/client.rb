@@ -14,13 +14,20 @@ module Sprites
       Resources::Sprites.new(self)
     end
 
-    def get(path) = parse_json(connection.get(path))
+    def get(path) = handle_response(connection.get(path))
 
-    def post(path, body) = parse_json(connection.post(path, body.to_json, "Content-Type" => "application/json"))
+    def post(path, body) = handle_response(connection.post(path, body.to_json, "Content-Type" => "application/json"))
 
     private
 
-    def parse_json(response) = JSON.parse(response.body, symbolize_names: true)
+    def handle_response(response)
+      body = JSON.parse(response.body, symbolize_names: true)
+
+      return body if response.success?
+
+      message = body[:error] || body[:errors]&.join(", ") || "Unknown error"
+      raise Error, message
+    end
 
     def connection
       @connection ||= Faraday.new(url: @base_url) do |f|

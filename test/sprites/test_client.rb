@@ -60,4 +60,24 @@ class TestClient < Minitest::Test
       assert sprite.url
     end
   end
+
+  def test_sprites_create_duplicate_name
+    VCR.use_cassette("sprites_create_duplicate") do
+      client = Sprites::Client.new(token: ENV["SPRITES_TOKEN"])
+
+      assert_raises Sprites::Error do
+        client.sprites.create(name: "test-sprite")
+      end
+    end
+  end
+
+  def test_sprites_create_empty_name
+    VCR.use_cassette("sprites_create_empty_name") do
+      client = Sprites::Client.new(token: ENV["SPRITES_TOKEN"])
+
+      assert_raises Sprites::Error do
+        client.sprites.create(name: "")
+      end
+    end
+  end
 end
