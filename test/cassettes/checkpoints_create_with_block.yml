@@ -1,0 +1,139 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.sprites.dev/v1/sprites
+    body:
+      encoding: UTF-8
+      string: '{"name":"checkpoint-block-sprite"}'
+    headers:
+      User-Agent:
+      - Faraday v2.14.0
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer <SPRITES_TOKEN>
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Date:
+      - Sat, 31 Jan 2026 12:24:45 GMT
+      Vary:
+      - accept-encoding
+      Content-Type:
+      - application/json; charset=utf-8
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - GI_QXvhy-MaCwJUAa1EC
+      Transfer-Encoding:
+      - chunked
+      Server:
+      - Fly/c3040578e (2026-01-27)
+      Via:
+      - 1.1 fly.io
+      Fly-Request-Id:
+      - 01KGA06HJVHPDYKKRS65DYJCGG-fra
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id":"sprite-00000000-0000-0000-0000-000000000002","name":"checkpoint-block-sprite","status":"cold","version":null,"url":"https://checkpoint-block-sprite-xxxx.sprites.app","updated_at":"2026-01-31T12:24:45.185622Z","created_at":"2026-01-31T12:24:45.185622Z","organization":"test-org","url_settings":{"auth":"sprite"},"environment_version":null}'
+  recorded_at: Sat, 31 Jan 2026 12:24:45 GMT
+- request:
+    method: post
+    uri: https://api.sprites.dev/v1/sprites/checkpoint-block-sprite/checkpoint
+    body:
+      encoding: UTF-8
+      string: '{"comment":"test checkpoint"}'
+    headers:
+      User-Agent:
+      - Faraday v2.14.0
+      Content-Type:
+      - application/json
+      Authorization:
+      - Bearer <SPRITES_TOKEN>
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Type:
+      - application/x-ndjson
+      Sprite-Version:
+      - dev
+      X-Content-Type-Options:
+      - nosniff
+      Date:
+      - Sat, 31 Jan 2026 12:24:45 GMT
+      Transfer-Encoding:
+      - chunked
+      Server:
+      - Fly/c3040578e (2026-01-27)
+      Via:
+      - 1.1 fly.io
+      Fly-Request-Id:
+      - 01KGA06J513EJ5T96P51JX2969-fra
+    body:
+      encoding: UTF-8
+      string: |
+        {"type":"info","data":"Creating checkpoint...","time":"2026-01-31T12:24:45.765463321Z"}
+        {"type":"info","data":"Checkpoint created successfully","time":"2026-01-31T12:24:46.47692935Z"}
+        {"type":"info","data":"\nCheckpoint Details:","time":"2026-01-31T12:24:46.48207412Z"}
+        {"type":"info","data":"  ID: v1","time":"2026-01-31T12:24:46.48208355Z"}
+        {"type":"info","data":"  Created: 2026-01-22 20:46:23","time":"2026-01-31T12:24:46.48209091Z"}
+        {"type":"info","data":"  Path: checkpoints/v1","time":"2026-01-31T12:24:46.48209154Z"}
+        {"type":"info","data":"\nTo restore this checkpoint:","time":"2026-01-31T12:24:46.48209169Z"}
+        {"type":"info","data":"  sprite checkpoint restore v1","time":"2026-01-31T12:24:46.48209233Z"}
+        {"type":"info","data":"  curl -X POST /checkpoints/v1/restore","time":"2026-01-31T12:24:46.4820961Z"}
+        {"type":"complete","data":"Checkpoint v1 created successfully","time":"2026-01-31T12:24:46.48209964Z"}
+  recorded_at: Sat, 31 Jan 2026 12:24:46 GMT
+- request:
+    method: delete
+    uri: https://api.sprites.dev/v1/sprites/checkpoint-block-sprite
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v2.14.0
+      Authorization:
+      - Bearer <SPRITES_TOKEN>
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      Date:
+      - Sat, 31 Jan 2026 12:24:47 GMT
+      Content-Type:
+      - text/plain; charset=utf-8
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      X-Request-Id:
+      - GI_QX1-8DlZ--f4AX1YE
+      Server:
+      - Fly/c3040578e (2026-01-27)
+      Via:
+      - 1.1 fly.io
+      Fly-Request-Id:
+      - 01KGA06K8Z7Y539S894A8Q2660-fra
+    body:
+      encoding: UTF-8
+      string: ''
+  recorded_at: Sat, 31 Jan 2026 12:24:47 GMT
+recorded_with: VCR 6.4.0

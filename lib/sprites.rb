@@ -5,6 +5,7 @@ require_relative "sprites/configuration"
 require_relative "sprites/collection"
 require_relative "sprites/sprite"
 require_relative "sprites/resources/sprites"
+require_relative "sprites/resources/checkpoints"
 require_relative "sprites/client"
 
 module Sprites

@@ -14,6 +14,10 @@ module Sprites
       Resources::Sprites.new(self)
     end
 
+    def checkpoints
+      Resources::Checkpoints.new(self)
+    end
+
     def get(path) = handle_response(connection.get(path))
 
     def post(path, body) = handle_response(connection.post(path, body.to_json, "Content-Type" => "application/json"))
@@ -22,18 +26,37 @@ module Sprites
 
     def delete(path) = handle_response(connection.delete(path))
 
+    def post_stream(path, body, &block)
+      response = connection.post(path, body.to_json, "Content-Type" => "application/json")
+
+      raise_error(response.body) unless response.success?
+
+      events = parse_ndjson(response.body)
+      block_given? ? events.each(&block) : events
+    end
+
     private
 
     def handle_response(response)
-      return nil if response.status == 204
+      case response.status
+      in 204
+        nil
+      in 200..299
+        parse_json(response.body)
+      else
+        raise_error(response.body)
+      end
+    end
 
-      body = JSON.parse(response.body, symbolize_names: true)
-
-      return body if response.success?
-
-      message = body[:error] || body[:errors]&.join(", ") || "Unknown error"
+    def raise_error(body)
+      parsed = parse_json(body)
+      message = parsed[:error] || parsed[:errors]&.join(", ") || "Unknown error"
       raise Error, message
     end
+
+    def parse_json(json) = JSON.parse(json, symbolize_names: true)
+
+    def parse_ndjson(body) = body.each_line.map { parse_json(it) }
 
     def connection
       @connection ||= Faraday.new(url: @base_url) do |f|
