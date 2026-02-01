@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Test script for session list and attach
+# Usage: SPRITES_TOKEN=your-token script/test_attach
+
+$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
+require "sprites"
+
+unless ENV["SPRITES_TOKEN"]
+  abort "Set SPRITES_TOKEN environment variable"
+end
+
+client = Sprites::Client.new(token: ENV["SPRITES_TOKEN"])
+
+# Create a sprite for testing
+sprite_name = "test-attach-#{Time.now.to_i}"
+puts "Creating sprite: #{sprite_name}"
+sprite = client.sprites.create(name: sprite_name, wait: true)
+puts "Created sprite: #{sprite.name} (status: #{sprite.status})"
+puts
+
+begin
+  # Start a detached session (sleep in background)
+  puts "--- Starting background sleep session ---"
+  result = client.exec.create(sprite.name, command: "sleep 30 &")
+  puts "Started background process"
+  puts
+
+  # Give it a moment
+  sleep 1
+
+  # List sessions
+  puts "--- Listing sessions ---"
+  sessions = client.exec.list(sprite.name)
+  puts "Sessions: #{sessions.inspect}"
+  puts
+
+  if sessions.is_a?(Array) && sessions.any?
+    session_id = sessions.first[:id] || sessions.first["id"]
+    puts "--- Attaching to session #{session_id} ---"
+    puts "(Press Ctrl+C to detach)"
+    puts
+
+    client.exec.attach(sprite.name, session_id)
+  else
+    puts "No sessions to attach to"
+  end
+rescue Interrupt
+  puts "\nDetached."
+ensure
+  puts
+  puts "Cleaning up: deleting sprite #{sprite_name}"
+  client.sprites.delete(sprite_name)
+  puts "Deleted."
+end

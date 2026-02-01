@@ -49,33 +49,19 @@ module Sprites
       #   client.exec.interactive(sprite.name, ["bash"])
       #
       def interactive(sprite_name, command, input: $stdin, output: $stdout, **options)
-        input.raw!
-        stdin = IO::Stream::Buffered.wrap(input)
-
-        connect(sprite_name, command: command, tty: true, **options) do |task, session|
-          session.on_stdout do |data|
-            output.write(data)
-            output.flush
-          end
-          session.on_stderr do |data|
-            output.write(data)
-            output.flush
-          end
-
-          input_task = task.async do
-            while (char = stdin.read(1))
-              session.write(char)
-            end
-          rescue IOError
-            # Connection closed
-          end
-
-          session.on_exit do |_code|
-            input_task.stop
-          end
+        run_interactive(input: input, output: output) do |block|
+          connect(sprite_name, command: command, tty: true, **options, &block)
         end
-      ensure
-        input.cooked!
+      end
+
+      # Attach to an existing session
+      #
+      #   client.exec.attach(sprite.name, session_id)
+      #
+      def attach(sprite_name, session_id, input: $stdin, output: $stdout)
+        run_interactive(input: input, output: output) do |block|
+          connect(sprite_name, session_id: session_id, tty: true, &block)
+        end
       end
 
       # Connect to an interactive session
@@ -111,11 +97,40 @@ module Sprites
 
       private
 
-      def build_websocket_url(sprite_name, command, tty:, **options)
+      def run_interactive(input:, output:)
+        input.raw!
+        stdin = IO::Stream::Buffered.wrap(input)
+
+        yield proc { |task, session|
+          session.on_stdout do |data|
+            output.write(data)
+            output.flush
+          end
+          session.on_stderr do |data|
+            output.write(data)
+            output.flush
+          end
+
+          input_task = task.async do
+            while (char = stdin.read(1))
+              session.write(char)
+            end
+          rescue IOError
+            # Connection closed
+          end
+
+          session.on_exit { |_code| input_task.stop }
+        }
+      ensure
+        input.cooked!
+      end
+
+      def build_websocket_url(sprite_name, command, tty:, session_id: nil, **options)
         base = "#{@client.websocket_url}/v1/sprites/#{sprite_name}/exec"
+        base = "#{base}/#{session_id}" if session_id
 
         params = []
-        Array(command).each { |arg| params << ["cmd", arg] }
+        Array(command).each { |arg| params << ["cmd", arg] } unless session_id
         params << ["tty", "true"] if tty
         params << ["stdin", "true"] if options.fetch(:stdin, true)
         params << ["cols", options[:cols].to_s] if options[:cols]
