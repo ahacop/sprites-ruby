@@ -9,6 +9,7 @@ require "uri"
 
 module Sprites
   module Resources
+    # Command execution on sprites via HTTP and WebSocket.
     class Exec
       STREAM_STDIN = 0
       STREAM_STDOUT = 1
@@ -20,16 +21,29 @@ module Sprites
         @client = client
       end
 
+      # Execute a command via HTTP POST (non-streaming).
+      #
+      # @param sprite_name [String] sprite name
+      # @param command [String] command to execute
+      # @return [Hash] result with :exit_code and :output
       def create(sprite_name, command:)
         @client.post("/v1/sprites/#{sprite_name}/exec", { command: })
       end
 
-      # List active sessions for a sprite
+      # List active exec sessions.
+      #
+      # @param sprite_name [String] sprite name
+      # @return [Array<Hash>] sessions with :id, :command, :tty, :is_active, etc.
       def list(sprite_name)
         @client.get("/v1/sprites/#{sprite_name}/exec")
       end
 
-      # Run a command and return the result (blocking)
+      # Run a command via WebSocket and return the result (blocking).
+      #
+      # @param sprite_name [String] sprite name
+      # @param command [Array<String>] command and arguments
+      # @param options [Hash] WebSocket options (:cols, :rows, :path)
+      # @return [Result] with stdout, stderr, and exit_code
       def run(sprite_name, command, **options)
         stdout = +""
         stderr = +""
@@ -44,31 +58,39 @@ module Sprites
         Result.new(stdout: stdout, stderr: stderr, exit_code: exit_code)
       end
 
-      # Start an interactive terminal session wired to stdin/stdout
+      # Start an interactive terminal session wired to stdin/stdout.
       #
-      #   client.exec.interactive(sprite.name, ["bash"])
-      #
+      # @param sprite_name [String] sprite name
+      # @param command [Array<String>] command and arguments
+      # @param input [IO] input stream (default: $stdin)
+      # @param output [IO] output stream (default: $stdout)
+      # @param options [Hash] WebSocket options (:cols, :rows)
       def interactive(sprite_name, command, input: $stdin, output: $stdout, **options)
         run_interactive(input: input, output: output) do |block|
           connect(sprite_name, command: command, tty: true, **options, &block)
         end
       end
 
-      # Attach to an existing session
+      # Attach to an existing exec session.
       #
-      #   client.exec.attach(sprite.name, session_id)
-      #
+      # @param sprite_name [String] sprite name
+      # @param session_id [Integer] session ID from #list
+      # @param input [IO] input stream (default: $stdin)
+      # @param output [IO] output stream (default: $stdout)
       def attach(sprite_name, session_id, input: $stdin, output: $stdout)
         run_interactive(input: input, output: output) do |block|
           connect(sprite_name, session_id: session_id, tty: true, &block)
         end
       end
 
-      # Kill an exec session
+      # Kill an exec session.
       #
-      #   client.exec.kill(sprite.name, session_id)
-      #   client.exec.kill(sprite.name, session_id, signal: "SIGKILL")
-      #
+      # @param sprite_name [String] sprite name
+      # @param session_id [Integer] session ID from #list
+      # @param signal [String, nil] signal to send (default: SIGTERM)
+      # @param timeout [String, nil] timeout waiting for exit (default: 10s)
+      # @yield [Hash] streaming NDJSON events (signal, exited, complete)
+      # @return [Array<Hash>] all events if no block given
       def kill(sprite_name, session_id, signal: nil, timeout: nil, &block)
         body = {}
         body[:signal] = signal if signal
@@ -76,20 +98,25 @@ module Sprites
         @client.post_stream("/v1/sprites/#{sprite_name}/exec/#{session_id}/kill", body, &block)
       end
 
-      # Connect to an interactive session
+      # Connect to a WebSocket exec session.
       #
-      # Yields the Async task and session, allowing you to spawn concurrent tasks:
+      # Yields the Async task and session for concurrent I/O.
       #
+      # @param sprite_name [String] sprite name
+      # @param command [Array<String>, nil] command and arguments
+      # @param tty [Boolean] enable TTY mode (default: false)
+      # @param options [Hash] WebSocket options (:session_id, :cols, :rows, :path, :stdin)
+      # @yield [Async::Task, Session] task and session for callbacks
+      #
+      # @example
       #   client.exec.connect(sprite.name, command: ["bash"], tty: true) do |task, session|
       #     session.on_stdout { |data| print data }
-      #
       #     task.async do
       #       while (line = $stdin.gets)
       #         session.write(line)
       #       end
       #     end
       #   end
-      #
       def connect(sprite_name, command: nil, tty: false, **options, &block)
         url = build_websocket_url(sprite_name, command, tty: tty, **options)
         endpoint = Async::HTTP::Endpoint.parse(url, alpn_protocols: ["http/1.1"])
@@ -153,8 +180,16 @@ module Sprites
         "#{base}#{query}"
       end
 
+      # Result of a blocking command execution.
+      # @!attribute [r] stdout
+      #   @return [String] standard output
+      # @!attribute [r] stderr
+      #   @return [String] standard error
+      # @!attribute [r] exit_code
+      #   @return [Integer] process exit code
       Result = Data.define(:stdout, :stderr, :exit_code)
 
+      # WebSocket session for interactive command execution.
       class Session
         def initialize(connection, tty: false)
           @connection = connection
@@ -163,12 +198,23 @@ module Sprites
           @exit_code = nil
         end
 
+        # @return [Integer, nil] exit code once process exits
         attr_reader :exit_code
 
+        # Register a callback for stdout data.
+        # @yield [String] stdout data
         def on_stdout(&block) = @callbacks[:stdout] << block
+
+        # Register a callback for stderr data.
+        # @yield [String] stderr data
         def on_stderr(&block) = @callbacks[:stderr] << block
+
+        # Register a callback for process exit.
+        # @yield [Integer] exit code
         def on_exit(&block) = @callbacks[:exit] << block
 
+        # Write data to stdin.
+        # @param data [String] data to write
         def write(data)
           if @tty
             @connection.write(Protocol::WebSocket::BinaryMessage.new(data))
@@ -179,6 +225,7 @@ module Sprites
           @connection.flush
         end
 
+        # Signal end of stdin (non-TTY mode only).
         def send_eof
           return if @tty
 
@@ -187,6 +234,7 @@ module Sprites
           @connection.flush
         end
 
+        # Close the WebSocket connection.
         def close
           @connection.close
         end

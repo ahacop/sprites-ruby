@@ -4,34 +4,59 @@ require "faraday"
 require "json"
 
 module Sprites
+  # HTTP client for the Sprites API.
+  #
+  # @example
+  #   client = Sprites::Client.new(token: "your-token")
+  #   sprite = client.sprites.create(name: "my-sprite")
+  #
   class Client
+    # @return [String] the API token
     attr_reader :token
 
+    # Create a new client.
+    #
+    # @param token [String, nil] API token (defaults to Sprites.configuration.token)
+    # @param base_url [String, nil] API base URL (defaults to https://api.sprites.dev)
     def initialize(token: nil, base_url: nil)
       @token = token || Sprites.configuration.token
       @base_url = base_url || Sprites.configuration.base_url
     end
 
+    # Access sprite operations.
+    #
+    # @return [Resources::Sprites]
     def sprites
       Resources::Sprites.new(self)
     end
 
+    # Access checkpoint operations.
+    #
+    # @return [Resources::Checkpoints]
     def checkpoints
       Resources::Checkpoints.new(self)
     end
 
+    # Access network policy operations.
+    #
+    # @return [Resources::Policies]
     def policies
       Resources::Policies.new(self)
     end
 
+    # Access command execution operations.
+    #
+    # @return [Resources::Exec]
     def exec
       Resources::Exec.new(self)
     end
 
+    # @return [String] WebSocket URL derived from base URL
     def websocket_url
       @base_url.sub(/^http(s?)/) { "ws#{$1}" }
     end
 
+    # @return [Array<Array<String>>] authorization headers for WebSocket connections
     def auth_headers
       [["authorization", "Bearer #{@token}"]]
     end
