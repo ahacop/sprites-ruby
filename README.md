@@ -186,6 +186,13 @@ bundle install
 rake test
 ```
 
+### Releasing
+
+```sh
+rake release            # build, tag, push gem to RubyGems
+just release          # create GitHub release with CHANGELOG notes
+```
+
 ## License
 
 MIT
