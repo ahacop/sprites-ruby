@@ -42,7 +42,7 @@ http_interactions:
           - 01KGABA95DECDHC0995GDG0FVQ-fra
       body:
         encoding: ASCII-8BIT
-        string: '{"id":"sprite-a84931f7-2ebe-42d7-90a2-08d4ff1833f8","name":"checkpoint-list-sprite","status":"cold","version":null,"url":"https://checkpoint-list-sprite-j34t.sprites.app","updated_at":"2026-01-31T15:39:01.956486Z","created_at":"2026-01-31T15:39:01.956486Z","organization":"changebot-ai","url_settings":{"auth":"sprite"},"environment_version":null}'
+        string: '{"id":"sprite-a84931f7-2ebe-42d7-90a2-08d4ff1833f8","name":"checkpoint-list-sprite","status":"cold","version":null,"url":"https://checkpoint-list-sprite-j34t.sprites.app","updated_at":"2026-01-31T15:39:01.956486Z","created_at":"2026-01-31T15:39:01.956486Z","organization":"test-org","url_settings":{"auth":"sprite"},"environment_version":null}'
     recorded_at: Sat, 31 Jan 2026 15:39:02 GMT
   - request:
       method: post

@@ -16,4 +16,5 @@ VCR.configure do |config|
   config.cassette_library_dir = "test/cassettes"
   config.hook_into :webmock
   config.filter_sensitive_data("<SPRITES_TOKEN>") { ENV["SPRITES_TOKEN"] }
+  config.filter_sensitive_data("test-org") { ENV["SPRITES_ORG"] }
 end
