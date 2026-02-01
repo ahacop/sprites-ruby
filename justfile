@@ -10,5 +10,8 @@ test-attach:
 kill-all:
     script/kill_all_sprites
 
+attach:
+    script/attach
+
 release *args:
     script/release {{ args }}

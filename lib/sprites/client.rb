@@ -104,7 +104,11 @@ module Sprites
       raise Error, body.strip
     end
 
-    def parse_json(json) = JSON.parse(json, symbolize_names: true)
+    def parse_json(json)
+      return nil if json.to_s.empty?
+
+      JSON.parse(json, symbolize_names: true)
+    end
 
     def parse_ndjson(body) = body.each_line.map { parse_json(it) }
 
