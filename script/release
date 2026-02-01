@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+dry_run=false
+if [[ "${1:-}" == "--dry-run" ]]; then
+  dry_run=true
+fi
+
+version=$(ruby -r ./lib/sprites/version -e 'puts Sprites::VERSION')
+notes=$(awk '/^## '"$version"'/{flag=1; next} /^## /{flag=0} flag' CHANGELOG.md)
+
+if [[ "$dry_run" == true ]]; then
+  echo "Would create release v$version with notes:"
+  echo "$notes"
+else
+  gh release create "v$version" --title "v$version" --notes "$notes"
+fi
