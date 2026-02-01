@@ -64,6 +64,18 @@ module Sprites
         end
       end
 
+      # Kill an exec session
+      #
+      #   client.exec.kill(sprite.name, session_id)
+      #   client.exec.kill(sprite.name, session_id, signal: "SIGKILL")
+      #
+      def kill(sprite_name, session_id, signal: nil, timeout: nil, &block)
+        body = {}
+        body[:signal] = signal if signal
+        body[:timeout] = timeout if timeout
+        @client.post_stream("/v1/sprites/#{sprite_name}/exec/#{session_id}/kill", body, &block)
+      end
+
       # Connect to an interactive session
       #
       # Yields the Async task and session, allowing you to spawn concurrent tasks:

@@ -50,6 +50,23 @@ class TestExec < Minitest::Test
     end
   end
 
+  def test_exec_kill
+    VCR.use_cassette("exec_kill") do
+      sprite = client.sprites.create(name: "exec-kill-sprite")
+      events = client.exec.kill(sprite.name, 1847)
+
+      assert_equal 3, events.length
+      assert_equal "signal", events[0][:type]
+      assert_equal "SIGTERM", events[0][:signal]
+      assert_equal 1847, events[0][:pid]
+      assert_equal "exited", events[1][:type]
+      assert_equal "complete", events[2][:type]
+      assert_equal 0, events[2][:exit_code]
+
+      client.sprites.delete(sprite.name)
+    end
+  end
+
   def test_websocket_url
     assert_equal "wss://api.sprites.dev", client.websocket_url
   end
