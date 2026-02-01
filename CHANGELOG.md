@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.1
+
+- Fix parsing error for empty API responses
+
 ## 0.2.0
 
 - Command execution via HTTP (`exec.create`)
