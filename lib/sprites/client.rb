@@ -5,6 +5,8 @@ require "json"
 
 module Sprites
   class Client
+    attr_reader :token
+
     def initialize(token: nil, base_url: nil)
       @token = token || Sprites.configuration.token
       @base_url = base_url || Sprites.configuration.base_url
@@ -24,6 +26,14 @@ module Sprites
 
     def exec
       Resources::Exec.new(self)
+    end
+
+    def websocket_url
+      @base_url.sub(/^http(s?)/) { "ws#{$1}" }
+    end
+
+    def auth_headers
+      [["authorization", "Bearer #{@token}"]]
     end
 
     def get(path) = handle_response(connection.get(path))

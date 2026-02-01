@@ -28,4 +28,12 @@ class TestExec < Minitest::Test
       end
     end
   end
+
+  def test_websocket_url
+    assert_equal "wss://api.sprites.dev", client.websocket_url
+  end
+
+  def test_auth_headers
+    assert_equal [["authorization", "Bearer #{ENV['SPRITES_TOKEN']}"]], client.auth_headers
+  end
 end
