@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Usage: SPRITES_TOKEN=your-token script/kill_all_sprites
+
+$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
+require "sprites"
+
+unless ENV["SPRITES_TOKEN"]
+  abort "Set SPRITES_TOKEN environment variable"
+end
+
+client = Sprites::Client.new(token: ENV["SPRITES_TOKEN"])
+
+puts "Fetching sprites..."
+collection = client.sprites.list
+
+if collection.sprites.empty?
+  puts "No sprites found."
+  exit 0
+end
+
+puts "Found #{collection.sprites.size} sprite(s):"
+collection.sprites.each do |sprite|
+  puts "  - #{sprite.name} (#{sprite.status})"
+end
+
+puts "\nDeleting all sprites..."
+collection.sprites.each do |sprite|
+  print "  Deleting #{sprite.name}... "
+  client.sprites.delete(sprite.name)
+  puts "done"
+end
+
+puts "\nAll sprites deleted."

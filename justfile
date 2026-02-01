@@ -6,3 +6,6 @@ test-interactive:
 
 test-attach:
     script/test_attach
+
+kill-all:
+    script/kill_all_sprites
