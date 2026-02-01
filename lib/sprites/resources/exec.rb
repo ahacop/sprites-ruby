@@ -24,6 +24,11 @@ module Sprites
         @client.post("/v1/sprites/#{sprite_name}/exec", { command: })
       end
 
+      # List active sessions for a sprite
+      def list(sprite_name)
+        @client.get("/v1/sprites/#{sprite_name}/exec")
+      end
+
       # Run a command and return the result (blocking)
       def run(sprite_name, command, **options)
         stdout = +""

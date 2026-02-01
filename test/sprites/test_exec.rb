@@ -29,6 +29,27 @@ class TestExec < Minitest::Test
     end
   end
 
+  def test_exec_list
+    VCR.use_cassette("exec_list") do
+      sprite = client.sprites.create(name: "exec-list-sprite")
+      sessions = client.exec.list(sprite.name)
+
+      assert_equal 2, sessions.length
+
+      assert_equal 1847, sessions[0][:id]
+      assert_equal "bash", sessions[0][:command]
+      assert_equal true, sessions[0][:is_active]
+      assert_equal true, sessions[0][:tty]
+      assert_equal "/home/sprite/myproject", sessions[0][:workdir]
+
+      assert_equal 1923, sessions[1][:id]
+      assert_equal "python -m http.server 8000", sessions[1][:command]
+      assert_equal false, sessions[1][:is_active]
+
+      client.sprites.delete(sprite.name)
+    end
+  end
+
   def test_websocket_url
     assert_equal "wss://api.sprites.dev", client.websocket_url
   end

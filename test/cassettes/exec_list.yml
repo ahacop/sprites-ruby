@@ -1,0 +1,97 @@
+---
+http_interactions:
+  - request:
+      method: post
+      uri: https://api.sprites.dev/v1/sprites
+      body:
+        encoding: UTF-8
+        string: '{"name":"exec-list-sprite"}'
+      headers:
+        User-Agent:
+          - Faraday v2.14.0
+        Authorization:
+          - Bearer <SPRITES_TOKEN>
+        Content-Type:
+          - application/json
+        Accept-Encoding:
+          - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+        Accept:
+          - "*/*"
+    response:
+      status:
+        code: 200
+        message: OK
+      headers:
+        Date:
+          - Sat, 31 Jan 2026 14:00:00 GMT
+        Content-Type:
+          - application/json; charset=utf-8
+        Cache-Control:
+          - max-age=0, private, must-revalidate
+        Transfer-Encoding:
+          - chunked
+      body:
+        encoding: ASCII-8BIT
+        string: '{"id":"sprite-00000000-0000-0000-0000-000000000005","name":"exec-list-sprite","status":"warm","version":null,"url":"https://exec-list-sprite-xxxx.sprites.app","updated_at":"2026-01-31T14:00:00.000000Z","created_at":"2026-01-31T14:00:00.000000Z","organization":"test-org","url_settings":{"auth":"sprite"},"environment_version":null}'
+    recorded_at: Sat, 31 Jan 2026 14:00:00 GMT
+  - request:
+      method: get
+      uri: https://api.sprites.dev/v1/sprites/exec-list-sprite/exec
+      body:
+        encoding: US-ASCII
+        string: ""
+      headers:
+        User-Agent:
+          - Faraday v2.14.0
+        Authorization:
+          - Bearer <SPRITES_TOKEN>
+        Accept-Encoding:
+          - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+        Accept:
+          - "*/*"
+    response:
+      status:
+        code: 200
+        message: OK
+      headers:
+        Date:
+          - Sat, 31 Jan 2026 14:00:01 GMT
+        Content-Type:
+          - application/json; charset=utf-8
+        Cache-Control:
+          - max-age=0, private, must-revalidate
+        Transfer-Encoding:
+          - chunked
+      body:
+        encoding: ASCII-8BIT
+        string: '[{"bytes_per_second":125.5,"command":"bash","created":"2026-01-05T10:30:00Z","id":1847,"is_active":true,"last_activity":"2026-01-05T10:35:00Z","tty":true,"workdir":"/home/sprite/myproject"},{"bytes_per_second":0,"command":"python -m http.server 8000","created":"2026-01-05T09:15:00Z","id":1923,"is_active":false,"last_activity":"2026-01-05T09:20:00Z","tty":false,"workdir":"/home/sprite/webapp"}]'
+    recorded_at: Sat, 31 Jan 2026 14:00:01 GMT
+  - request:
+      method: delete
+      uri: https://api.sprites.dev/v1/sprites/exec-list-sprite
+      body:
+        encoding: US-ASCII
+        string: ""
+      headers:
+        User-Agent:
+          - Faraday v2.14.0
+        Authorization:
+          - Bearer <SPRITES_TOKEN>
+        Accept-Encoding:
+          - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+        Accept:
+          - "*/*"
+    response:
+      status:
+        code: 204
+        message: No Content
+      headers:
+        Date:
+          - Sat, 31 Jan 2026 14:00:02 GMT
+        Cache-Control:
+          - max-age=0, private, must-revalidate
+      body:
+        encoding: ASCII-8BIT
+        string: ""
+    recorded_at: Sat, 31 Jan 2026 14:00:02 GMT
+recorded_with: VCR 6.4.0
