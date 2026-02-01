@@ -1,0 +1,62 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Manual test script for WebSocket exec session
+# Usage: SPRITES_TOKEN=your-token script/test_websocket
+
+$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
+require "sprites"
+
+unless ENV["SPRITES_TOKEN"]
+  abort "Set SPRITES_TOKEN environment variable"
+end
+
+client = Sprites::Client.new(token: ENV["SPRITES_TOKEN"])
+
+puts "=== Testing WebSocket exec session ==="
+
+# Create a sprite for testing
+sprite_name = "test-websocket-#{Time.now.to_i}"
+puts "Creating sprite: #{sprite_name}"
+sprite = client.sprites.create(name: sprite_name, wait: true)
+puts "Created sprite: #{sprite.name} (status: #{sprite.status})"
+puts
+
+begin
+  # Test 1: Simple command with run (blocking, returns result)
+  puts "--- Test 1: Simple command with run ---"
+  result = client.exec.run(sprite.name, ["echo", "hello from websocket"])
+  puts "stdout: #{result.stdout.inspect}"
+  puts "stderr: #{result.stderr.inspect}"
+  puts "exit_code: #{result.exit_code}"
+  puts
+
+  # Test 2: Stderr output
+  puts "--- Test 2: Stderr output ---"
+  result = client.exec.run(sprite.name, ["sh", "-c", "echo stdout; echo stderr >&2"])
+  puts "stdout: #{result.stdout.inspect}"
+  puts "stderr: #{result.stderr.inspect}"
+  puts "exit_code: #{result.exit_code}"
+  puts
+
+  # Test 3: TTY mode with concurrent tasks
+  puts "--- Test 3: TTY mode with bash ---"
+  client.exec.connect(sprite.name, command: ["bash"], tty: true) do |task, session|
+    session.on_stdout { |data| print data }
+    session.on_exit { |code| puts "\nExit code: #{code}" }
+
+    # Input runs concurrently with the read loop
+    task.async do
+      session.write("echo 'TTY test'\n")
+      sleep 0.3
+      session.write("exit\n")
+    end
+  end
+  puts
+
+  puts "=== All tests completed ==="
+ensure
+  puts "Cleaning up: deleting sprite #{sprite_name}"
+  client.sprites.delete(sprite_name)
+  puts "Deleted."
+end

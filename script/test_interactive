@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Test script for interactive exec session
+# Usage: SPRITES_TOKEN=your-token script/test_interactive
+
+$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
+require "sprites"
+
+unless ENV["SPRITES_TOKEN"]
+  abort "Set SPRITES_TOKEN environment variable"
+end
+
+client = Sprites::Client.new(token: ENV["SPRITES_TOKEN"])
+
+# Create a sprite for testing
+sprite_name = "test-interactive-#{Time.now.to_i}"
+puts "Creating sprite: #{sprite_name}"
+sprite = client.sprites.create(name: sprite_name, wait: true)
+puts "Created sprite: #{sprite.name} (status: #{sprite.status})"
+puts
+
+begin
+  puts "Starting interactive bash session..."
+  puts "Type commands and press Enter. Type 'exit' to quit."
+  puts
+
+  client.exec.interactive(sprite.name, ["bash"])
+ensure
+  puts
+  puts "Cleaning up: deleting sprite #{sprite_name}"
+  client.sprites.delete(sprite_name)
+  puts "Deleted."
+end
